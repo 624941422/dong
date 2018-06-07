@@ -95,7 +95,21 @@ class CourseRecord(models.Model):
     """
     上课记录表
     """
-    pass
+    from_class = models.ForeignKey("ClassList", verbose_name='班级')
+    day_num = models.SmallIntegerField(verbose_name='第几节(天)')
+    teacher = models.ForeignKey('UserProfile')
+    has_work = models.BooleanField(default=True)
+    work_title = models.CharField(max_length=128, blank=True, null=True)
+    work_content = models.TextField(blank=True, null=True)
+    outline = models.TextField(verbose_name='本节大纲')
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return "%s : %s" % (self.from_class, self.day_num)
+
+    class Meta:
+        unique_together = ('from_class', 'day_num')
+
 
 class StudyRecord(models.Model):
     """
