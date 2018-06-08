@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Customer(models.Model):
     """
@@ -14,7 +15,7 @@ class Customer(models.Model):
                       (3, '百度推广'),
                       (4, '51CTO'),
                       (5, '知乎'),)
-    source = models.SmallIntegerField(choices=source_choices)
+    source = models.SmallIntegerField(choices=source_choices, verbose_name='来源')
     referral_from = models.CharField(max_length=64, blank=True, null=True, verbose_name='转介绍人QQ')
     consult_course = models.ForeignKey('Course', verbose_name='咨询课程')
     content = models.TextField(verbose_name='咨询详情')
@@ -26,11 +27,19 @@ class Customer(models.Model):
     def __str__(self):
         return self.qq
 
+    class Meta:
+        verbose_name = '客户表'
+        verbose_name_plural = '客户表'
+
 class Tag(models.Model):
     name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = '标签'
+        verbose_name_plural = '标签'
 
 class CustomerFollowUp(models.Model):
     """
@@ -44,12 +53,15 @@ class CustomerFollowUp(models.Model):
                         (3, '三星'),
                         (4, '四星'),
                         (5, '五星'),)
-    intention = models.SmallIntegerField(intention_choice)
+    intention = models.SmallIntegerField(choices=intention_choice, verbose_name='报名意向')
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return "<%s : %s>" % (self.customer.qq, self.content)
 
+    class Meta:
+        verbose_name = '客户跟进表'
+        verbose_name_plural = '客户跟进表'
 
 class Course(models.Model):
     """
@@ -62,6 +74,10 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = '课程表'
+        verbose_name_plural = '课程表'
+
 class Branch(models.Model):
     """
     校区表
@@ -70,6 +86,10 @@ class Branch(models.Model):
     addr = models.CharField(max_length=64)
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = '校区表'
+        verbose_name_plural = '校区表'
 
 class ClassList(models.Model):
     """
@@ -82,7 +102,7 @@ class ClassList(models.Model):
     class_type_choice = ((0, '面授(脱产)'),
                          (1, '面授(周末)'),
                          (2, '网络班'),)
-    class_type = models.SmallIntegerField(class_type_choice, verbose_name='班级类型')
+    class_type = models.SmallIntegerField(choices=class_type_choice, verbose_name='班级类型')
     start_date = models.DateField(verbose_name='开班日期')
     end_date = models.DateField(verbose_name='结业日期', blank=True, null=True)
     def __str__(self):
@@ -90,6 +110,8 @@ class ClassList(models.Model):
 
     class Meta:
         unique_together = ('branch', 'course', 'semester')
+        verbose_name = '班级表'
+        verbose_name_plural = '班级表'
 
 class CourseRecord(models.Model):
     """
@@ -109,35 +131,102 @@ class CourseRecord(models.Model):
 
     class Meta:
         unique_together = ('from_class', 'day_num')
-
+        verbose_name = '上课记录表'
+        verbose_name_plural = '上课记录表'
 
 class StudyRecord(models.Model):
     """
     学习记录表
     """
-    pass
+    student = models.ForeignKey('Enrollment')
+    course_record = models.ForeignKey('CourseRecord')
+    attendance_choice = ((0, '已签到'),
+                         (1, '迟到'),
+                         (2, '请假'),
+                         (0, '退学'),)
+    attendace = models.SmallIntegerField(choices=attendance_choice, default=0)
+    score_choice = ((100, 'A+'),
+                    (90, 'A'),
+                    (85, 'B+'),
+                    (80, 'B'),
+                    (75, 'B+'),
+                    (70, 'C+'),
+                    (60, 'C'),
+                    (40, 'C-'),
+                    (-50, 'D'),
+                    (-100, 'copy'),
+                    (0, 'N/A'))
+    score = models.SmallIntegerField(choices=score_choice, verbose_name='分数')
+    memo = models.TextField(blank=True, null=True)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "%s %s %s" % (self.student, self.course_record, self.score)
+
+    class Meta:
+        verbose_name = '学习记录表'
+        verbose_name_plural = '学习记录表'
 
 class Enrollment(models.Model):
     """
     报名表
     """
-    pass
+    student = models.ForeignKey('Customer')
+    enrolled_class = models.ForeignKey('ClassList', verbose_name='报名班级')
+    consultant = models.ForeignKey('UserProfile', verbose_name='咨询顾问')
+    contract_agreed = models.BooleanField(default=False, verbose_name='学员已同意合同条款')
+    contract_approved = models.BooleanField(default=False, verbose_name='合同已审核')
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "%s : %s" % (self.student, self.enrolled_class)
+
+    class Meta:
+        unique_together = ('student', 'enrolled_class')
+        verbose_name = '报名表'
+        verbose_name_plural = '报名表'
 
 class Payment(models.Model):
     """
     缴费记录
     """
-    pass
+    student = models.ForeignKey('Customer')
+    course = models.ForeignKey('Course', verbose_name='所报课程')
+    amount = models.PositiveSmallIntegerField(default=500, verbose_name='数额')
+    consultant = models.ForeignKey('UserProfile', verbose_name='咨询顾问')
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "%s" % (self.student,)
+
+    class Meta:
+        verbose_name = '缴费记录'
+        verbose_name_plural = '缴费记录'
 
 class UserProfile(models.Model):
     """
     账号表
     """
-    pass
+    user = models.OneToOneField(User)
+    name = models.CharField(max_length=32)
+    role = models.ManyToManyField('Role', blank=True, null=True)
+
+    def __str__(self):
+        return '%s' % (self.name,)
+
+    class Meta:
+        verbose_name = '账号表'
+        verbose_name_plural = '账号表'
 
 class Role(models.Model):
     """
     角色表
     """
-    pass
+    name = models.CharField(max_length=32, unique=True)
 
+    def __str__(self):
+        return '%s' % (self.name,)
+
+    class Meta:
+        verbose_name = '角色表'
+        verbose_name_plural = '角色表'
