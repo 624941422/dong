@@ -1,3 +1,9 @@
-from django.test import TestCase
 
-# Create your tests here.
+class a:
+    pass
+
+
+
+a.a1 = 'qqq'
+
+print(a.a1)
