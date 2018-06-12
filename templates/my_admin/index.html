@@ -1,0 +1,28 @@
+{% extends 'bootstrap-index.html' %}
+
+{% block container %}
+    <!-- Default page header -->
+    <div class="page-header" style="padding-bottom: 0; margin: 0 0;">
+        <h3><small style="font-size: 16px; font-style: normal; margin-left: 20px;">站点管理</small></h3>
+    </div>
+
+    {{ dic_value }}
+    <div class="panel panel-success" style="margin: 5px 20px; width: 40%;">
+        <!-- Default panel contents -->
+        <div class="panel-heading" style="padding: 2px 5px">
+            <h3 class="panel-title">Panel title</h3>
+        </div>
+        <!-- Table -->
+        <table class="table table-hover">
+            <tr>
+              <td style="width: 70%">Mark</td>
+              <td style="width: 30%; text-align: right">
+                  <a class="btn btn-default btn-xs " href="#" role="button">增加</a>
+                  <a class="btn btn-default btn-xs" href="#" role="button">修改</a>
+              </td>
+            </tr>
+        </table>
+    </div>
+
+{% endblock %}
+
