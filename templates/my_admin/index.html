@@ -1,4 +1,6 @@
 {% extends 'bootstrap-index.html' %}
+{% load tags %}
+
 
 {% block container %}
     <!-- Default page header -->
@@ -7,7 +9,7 @@
     </div>
 
     {% for panel,p_val in dic_value.items %}
-    <div class="panel panel-success" style="margin: 5px 20px; width: 40%;">
+    <div class="panel panel-success" style="margin: 0px 10px 2px; width: 500px;">
         <!-- Default panel contents -->
         <div class="panel-heading" style="padding: 2px 5px">
             <h3 class="panel-title">{{ panel }}</h3>
@@ -17,9 +19,11 @@
         <table class="table table-hover">
             {% for item,t_val in  p_val.items %}
             <tr>
-              <td style="width: 70%">{{ item }}</td>
+              <td style="width: 70%">
+                  <a href="{% url 'table_object' panel item %}">{{ item }}</a>
+              </td>
               <td style="width: 30%; text-align: right">
-                  <a class="btn btn-default btn-xs " href="#" role="button">增加</a>
+                  <a class="btn btn-default btn-xs" href="#" role="button">增加</a>
                   <a class="btn btn-default btn-xs" href="#" role="button">修改</a>
               </td>
             </tr>

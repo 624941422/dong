@@ -17,4 +17,5 @@ from MyAdmin import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'(\w+)/(\w+)/$', views.table_object, name='table_object'),
 ]
