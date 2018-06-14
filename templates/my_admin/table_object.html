@@ -1,6 +1,27 @@
 {% extends 'my_admin/index.html' %}
-
+{% load tags %}
 {% block container %}
-{{ data }}
+    <div id="content" style="margin: 10px 15px;">
+        <h1 style="font-size: 18px;color: #666;padding: 0 6px 0 0;margin: 10px 15px;">选择 {{ data.model }} 来修改</h1>
+        <div class="bs-example" data-example-id="bordered-table" style="margin: 10px 15px;width: 70%;min-width: 760px">
+            <table class="table table-bordered">
+      <thead>
+        <tr>
+        {% for head in data.display %}
+          <th>{{ head }}</th>
+        {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for obj in data.queryset %}
+        <tr>
+          {% for filed in data.display %}
+          <td>{% render_data obj filed %}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+        </div>
+    </div>
 {% endblock %}
-

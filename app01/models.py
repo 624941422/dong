@@ -32,7 +32,6 @@ class Customer(models.Model):
         verbose_name = '客户表'
         verbose_name_plural = '客户表'
 
-
 class Tag(models.Model):
     name = models.CharField(max_length=64, unique=True)
 
