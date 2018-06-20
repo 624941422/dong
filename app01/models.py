@@ -7,7 +7,7 @@ class Customer(models.Model):
     客户信息表
     """
     name = models.CharField(max_length=32, blank=True, null=True)
-    qq = models.CharField(max_length=64, unique=True)
+    qq = models.CharField(max_length=64, unique=True, verbose_name='QQ')
     qq_name = models.CharField(max_length=64, blank=True, null=True)
     phone = models.CharField(max_length=64, blank=True, null=True, unique=True)
     source_choices = ((0, '转介绍'),

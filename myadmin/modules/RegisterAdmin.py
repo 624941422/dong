@@ -7,6 +7,7 @@ class MyAdmin(object):
 
 class CustomerAdmin(MyAdmin):
     list_display = ('id', 'qq', 'source', 'consultant', 'date')
+    list_filters = ['source','consultant','consult_course','status']
 
 def register(models_class, admin_class=None):
     app_name = models_class._meta.app_label
