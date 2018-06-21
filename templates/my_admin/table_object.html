@@ -1,14 +1,14 @@
 {% extends 'my_admin/index.html' %}
 {% load tags %}
 {% block container %}
-    <div id="content" style="margin: 10px 15px;min-width: 760px">
+    <div id="content" style="margin: 10px 15px;min-width: 760px;">
         <h1 style="font-size: 18px;color: #666;padding: 0 6px 0 0;margin: 10px 15px;">选择 {{ data.model }} 来修改</h1>
         <div class="row" style="margin: 10px 15px;min-width: 760px">
             <form class="" method="get">
                   {% for condtion in data.admin_class.list_filters %}
                     <div class="col-xs-2">
                     <span>{{ condtion }}</span>
-                    <select class="form-control" style="height: 20px" name="{{ condtion }}"><option value="">------</option></select>
+                    {% render_filter condtion data.model_obj data.selected %}
                     </div>
                   {% endfor %}
                     <button type="SUBMIT" class="btn btn-success">检索</button>

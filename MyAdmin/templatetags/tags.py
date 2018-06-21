@@ -19,27 +19,23 @@ def render_data(obj, field):
     return field_val
 
 @register.simple_tag
-def render_filter_ele(condtion, instance_model, filter_condtions):
-    print(instance_model)
-    select_ele = '''<select class="form-control" name='%s' ><option value=''>----</option>''' %condtion
-
-    field_obj = instance_model._meta.get_field(condtion)
+def render_filter(condtion, model, mychoices):
+    selected = ''
+    html = '''<select class="form-control" style="height: 30px;font-size:12px" name="%s"><option value=""> --- </option> ''' % condtion
+    field_obj = model._meta.get_field(condtion)
     if field_obj.choices:
-        selected = ''
-        for choice_item in field_obj.choices:
-            print("choice",choice_item,filter_condtions.get(condtion),type(filter_condtions.get(condtion)))
-            if filter_condtions.get(condtion) == str(choice_item[0]):
-                selected ="selected"
-
-            select_ele += '''<option value='%s' %s>%s</option>''' %(choice_item[0],selected,choice_item[1])
-            selected =''
-
-    if type(field_obj).__name__ == "ForeignKey":
-        selected = ''
-        for choice_item in field_obj.get_choices()[1:]:
-            if filter_condtions.get(condtion) == str(choice_item[0]):
-                selected = "selected"
-            select_ele += '''<option value='%s' %s>%s</option>''' %(choice_item[0],selected,choice_item[1])
+        for item in field_obj.choices:
+            if mychoices:
+                if mychoices[condtion] == str(item[0]):
+                    selected = 'selected'
+            html += '''<option value="%s" %s> %s </option>''' % (item[0], selected, item[1])
             selected = ''
-    select_ele += "</select>"
-    return mark_safe(select_ele)
+    elif type(field_obj).__name__ == 'ForeignKey':
+        for item in field_obj.get_choices(include_blank=False):
+            if mychoices:
+                if mychoices[condtion] == str(item[0]):
+                    selected = 'selected'
+            html += '''<option value="%s" %s> %s </option>''' % (item[0], selected, item[1])
+            selected = ''
+    html += '''</select>'''
+    return html
