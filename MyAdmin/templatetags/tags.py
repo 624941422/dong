@@ -38,4 +38,5 @@ def render_filter(condtion, model, mychoices):
             html += '''<option value="%s" %s> %s </option>''' % (item[0], selected, item[1])
             selected = ''
     html += '''</select>'''
-    return html
+    return mark_safe(html)
+
