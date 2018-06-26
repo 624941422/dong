@@ -9,7 +9,7 @@ class MyAdmin(object):
 class CustomerAdmin(MyAdmin):
     list_display = ('id', 'qq', 'source', 'consultant', 'date')
     list_filters = ['source', 'consultant']
-    list_per_page = 2
+    list_per_page = 5
 
 def register(models_class, admin_class=None):
     app_name = models_class._meta.app_label

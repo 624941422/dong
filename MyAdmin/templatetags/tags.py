@@ -40,3 +40,11 @@ def render_filter(condtion, model, mychoices):
     html += '''</select>'''
     return mark_safe(html)
 
+@register.simple_tag
+def render_page(num, mychoices):
+    html = '''<li><a href="?page=%s''' % num
+    for k, v in mychoices:
+        html.join('?', k, '=', v)
+    html += '''">%s</a></li>''' % num
+    print(html)
+    return mark_safe(html)

@@ -21,7 +21,7 @@ def table_object(request, app, model):
     models = importlib.import_module('%s.models' % app)
     model_obj = getattr(models, model)
     if selected:
-        selected_del = dict(filter(lambda x: x[1] != '', selected.items()))
+        selected_del = dict(filter(lambda x: x[1] != '' or x[0] != 'page', selected.items()))
         queryset = model_obj.objects.filter(**selected_del)
     else:
         queryset = model_obj.objects.all()
@@ -38,11 +38,9 @@ def table_object(request, app, model):
     data = {'app': app,
             'model': model,
             'display': display,
-            'queryset': queryset,
             'admin_class': admin_class,
             'model_obj': model_obj,
             'selected': selected,
             'contacts': contacts,
             }
-    print(contacts.has_previous)
     return render(request, 'my_admin/table_object.html', {'data': data})
