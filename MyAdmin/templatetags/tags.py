@@ -42,9 +42,10 @@ def render_filter(condtion, model, mychoices):
 
 @register.simple_tag
 def render_page(num, mychoices):
+    html = ''
+    mychoices_filter = dict(filter(lambda x: x[0] != 'page', mychoices.items()))
     html = '''<li><a href="?page=%s''' % num
-    for k, v in mychoices:
-        html.join('?', k, '=', v)
+    for k, v in mychoices_filter.items():
+        html += '''&%s=%s''' % (k, v)
     html += '''">%s</a></li>''' % num
-    print(html)
     return mark_safe(html)

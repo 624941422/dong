@@ -20,9 +20,9 @@ def table_object(request, app, model):
             display = [model]
     models = importlib.import_module('%s.models' % app)
     model_obj = getattr(models, model)
-    if selected:
-        selected_del = dict(filter(lambda x: x[1] != '' or x[0] != 'page', selected.items()))
-        queryset = model_obj.objects.filter(**selected_del)
+    selected_filter = dict(filter(lambda x: x[1] != '' and x[0] != 'page', selected.items()))
+    if selected_filter:
+        queryset = model_obj.objects.filter(**selected_filter)
     else:
         queryset = model_obj.objects.all()
     paginator = Paginator(queryset, admin_class.list_per_page)
