@@ -21,6 +21,7 @@ def render_data(obj, field):
 @register.simple_tag
 def render_filter(condtion, model, mychoices):
     selected = ''
+    mychoices = dict(filter(lambda x: x[0] != 'page', mychoices.items()))
     html = '''<select class="form-control" style="height: 30px;font-size:12px" name="%s"><option value=""> --- </option> ''' % condtion
     field_obj = model._meta.get_field(condtion)
     if field_obj.choices:
@@ -41,10 +42,13 @@ def render_filter(condtion, model, mychoices):
     return mark_safe(html)
 
 @register.simple_tag
-def render_page(num, mychoices):
+def render_page(num, mychoices, number):
     html = ''
+    li_class = ''
     mychoices_filter = dict(filter(lambda x: x[0] != 'page', mychoices.items()))
-    html = '''<li><a href="?page=%s''' % num
+    if num == number:
+        li_class = 'active'
+    html = '''<li class="%s"><a href="?page=%s''' % (li_class, num)
     for k, v in mychoices_filter.items():
         html += '''&%s=%s''' % (k, v)
     html += '''">%s</a></li>''' % num

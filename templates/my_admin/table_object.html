@@ -37,14 +37,14 @@
               <ul class="pagination">
                 {% if data.contacts.has_previous %}
                 <li>
-                  <a href="?page={{ data.contacts.previous_page_number }}&source={{ data.contacts.previous_page_number }}&consultant={{ data.contacts.previous_page_number }}" aria-label="Previous">
+                  <a href="?page={{ data.contacts.previous_page_number }}" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                   </a>
                 </li>
                 {% endif %}
 
                 {% for num in data.contacts.paginator.page_range %}
-                  {% render_page num data.selected %}
+                  {% render_page num data.selected data.contacts.number %}
                 {% endfor %}
 
                 {% if data.contacts.has_next %}
