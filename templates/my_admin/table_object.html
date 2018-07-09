@@ -19,7 +19,9 @@
                 <thead>
                   <tr>
                   {% for head in data.display %}
-                    <th>{{ head }}</th>
+                    <th>
+                        {% coloum_head_order head data.selected %}
+                    </th>
                   {% endfor %}
                   </tr>
                 </thead>
@@ -56,6 +58,7 @@
                 {% endif %}
               </ul>
             </nav>
+            <span class="label label-info">共 {{ data.contacts.paginator.num_pages }} 页</span>
         </div>
     </div>
 {% endblock %}

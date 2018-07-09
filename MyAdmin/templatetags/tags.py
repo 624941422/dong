@@ -21,8 +21,9 @@ def render_data(obj, field):
 @register.simple_tag
 def render_filter(condtion, model, mychoices):
     selected = ''
-    mychoices = dict(filter(lambda x: x[0] != 'page', mychoices.items()))
-    html = '''<select class="form-control" style="height: 30px;font-size:12px" name="%s"><option value=""> --- </option> ''' % condtion
+    mychoices = dict(filter(lambda x: x[0] != 'page' and x[0] != 'o', mychoices.items()))
+    html = '''<select class="form-control" style="height: 30px;font-size:12px" name="%s"><option value="">\
+     --- </option> ''' % condtion
     field_obj = model._meta.get_field(condtion)
     if field_obj.choices:
         for item in field_obj.choices:
@@ -53,3 +54,26 @@ def render_page(num, mychoices, number):
         html += '''&%s=%s''' % (k, v)
     html += '''">%s</a></li>''' % num
     return mark_safe(html)
+
+@register.simple_tag
+def coloum_head_order(head, mychoices):
+    mychoices_filter = dict(filter(lambda x: x[0] != 'page' and x[0] != 'o', mychoices.items()))
+    html = ''
+    sort_icon = ''
+    if 'o' in mychoices:
+        if mychoices['o'].startswith("-"):
+            if mychoices['o'].split('-')[1] == head:
+                print('ok')
+                sort_icon = '''<span class="glyphicon glyphicon-chevron-down"></span>'''
+        else:
+            sort_icon = '''<span class="glyphicon glyphicon-chevron-up"></span>'''
+        html += sort_icon
+    if not mychoices_filter:
+        html += '''<a href="?o=-%s">%s</a>''' % (head, head)
+    else:
+        html += '''<a href="?o=-%s''' % head
+        for k, v in mychoices_filter.items():
+            html += '''&%s=%s''' % (k, v)
+        html += '''">%s</a>''' % head
+    print(html)
+    return  html
