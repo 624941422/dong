@@ -63,17 +63,24 @@ def coloum_head_order(head, mychoices):
     if 'o' in mychoices:
         if mychoices['o'].startswith("-"):
             if mychoices['o'].split('-')[1] == head:
-                print('ok')
                 sort_icon = '''<span class="glyphicon glyphicon-chevron-down"></span>'''
         else:
-            sort_icon = '''<span class="glyphicon glyphicon-chevron-up"></span>'''
+            if mychoices['o'] == head:
+                sort_icon = '''<span class="glyphicon glyphicon-chevron-up"></span>'''
         html += sort_icon
     if not mychoices_filter:
-        html += '''<a href="?o=-%s">%s</a>''' % (head, head)
+        if 'o' in mychoices and mychoices['o'].startswith("-"):
+            html += '''<a href="?o=%s">%s</a>''' % (head, head)
+        else:
+            html += '''<a href="?o=-%s">%s</a>''' % (head, head)
     else:
-        html += '''<a href="?o=-%s''' % head
+        if 'o' in mychoices and mychoices['o'].startswith("-"):
+            html += '''<a href="?o=%s''' % head
+
+        else:
+            html += '''<a href="?o=-%s''' % head
+
         for k, v in mychoices_filter.items():
             html += '''&%s=%s''' % (k, v)
         html += '''">%s</a>''' % head
-    print(html)
     return  html
